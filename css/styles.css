@@ -1,0 +1,21 @@
+body, html {
+  font-family: "Courier New";
+  margin: 0;
+  text-align: center;
+}
+
+canvas {
+  background: #ffffff;
+  display: block;
+  margin: 0 auto;
+  border: 1px solid;
+}
+
+input[type=number] {
+  width: 50px;
+  margin: 0;
+}
+
+button {
+  font-family: "Courier New";
+}
