@@ -12,19 +12,23 @@ drawingCanvas.addEventListener("mousedown", e => {
   startDrawing(e);
   isMouseDown = true;
 });
+
 drawingCanvas.addEventListener("mousemove", e => {
   if (isDrawing) {
     draw(e);
   }
 });
+
 drawingCanvas.addEventListener("mouseleave", e => {
   stopDrawing(e);
 });
+
 drawingCanvas.addEventListener("mouseenter", e => {
   if (isMouseDown) {
     startDrawing(e);
   }
 });
+
 window.addEventListener("mouseup", e => {
   if (isDrawing) {
     stopDrawing(e);

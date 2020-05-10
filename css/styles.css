@@ -19,3 +19,7 @@ input[type=number] {
 button {
   font-family: "Courier New";
 }
+
+.main-container {
+  margin-top: 50px;
+}
