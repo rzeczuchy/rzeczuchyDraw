@@ -41,26 +41,25 @@ drawingCanvas.oncontextmenu = e => {
   e.preventDefault();
 };
 
-// download link for the image
-const downloadLink = document.getElementById("downloadLink");
-downloadLink.setAttribute("download", "drawing.png");
-
-function cacheImage() {
-    downloadLink.setAttribute('href', drawingCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
-}
-
-// color picker for brushColor
+// variables for the brush and controls
+let isDrawing = false;
+let isMouseDown = false;
+let x = 0;
+let y = 0;
+const minBrushSize = 1;
+const maxBrushSize = 20;
+let brushSize = 1;
 let brushColor = "#ff0066";
+
+// UI ELEMENTS
+// color picker
 const brushColorSelect = document.getElementById("brushColorSelect");
 brushColorSelect.value = brushColor;
 function setBrushColor() {
   brushColor = brushColorSelect.value;
 }
 
-// brush size
-const minBrushSize = 1;
-const maxBrushSize = 20;
-let brushSize = 1;
+// brush size select
 const brushSizeSelect = document.getElementById("brushSizeSelect");
 brushSizeSelect.value = brushSize;
 function setBrushSize() {
@@ -68,11 +67,19 @@ function setBrushSize() {
   brushSize = brushSizeSelect.value;
 }
 
-// indicates if the user is currently drawing on canvas
-let isDrawing = false;
-let isMouseDown = false;
-let x = 0;
-let y = 0;
+// save button
+const saveButton = document.getElementById("saveButton");
+saveButton.setAttribute("download", "drawing.png");
+function cacheImage() {
+  saveButton.setAttribute('href', drawingCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
+}
+
+// clear button
+function clearCanvas() {
+  if (confirm("This action will OBLITERATE your beautiful drawing! You sure?")) {
+    context.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+  }
+}
 
 // start drawing a shape
 function startDrawing(e) {

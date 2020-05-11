@@ -24,16 +24,16 @@
         <td><input id="brushSizeSelect" type="number" oninput="setBrushSize()" />px</td>
         <td>Width:</td>
         <td><input id="canvasWidthSelect" type="number" disabled />px</td>
-        <td><button class="action-button" type="button" name="button" disabled>Undo</button> </td>
-        <td><a id="downloadLink"><button class="action-button" type="button" name="button">Download</button></a></td>
+        <td><button id="undoButton" class="action-button" type="button" name="button" disabled>Undo</button> </td>
+        <td><a id="saveButton"><button class="action-button" type="button" name="button">Save</button></a></td>
       </tr>
       <tr>
         <td>Color:</td>
         <td><input id="brushColorSelect" type="color" oninput="setBrushColor()" /></td>
         <td>Height:</td>
         <td><input id="canvasHeightSelect" type="number" disabled />px</td>
-        <td><button class="action-button" type="button" name="button" disabled>Redo</button></td>
-        <td><button class="action-button" type="button" name="button" disabled>Clear</button></td>
+        <td><button id="redoButton" class="action-button" type="button" name="button" disabled>Redo</button></td>
+        <td><button id="clearButton" class="action-button" type="button" name="button" onclick="clearCanvas()">Clear (!)</button></td>
       </tr>
     </table>
   </div>
