@@ -41,11 +41,17 @@ drawingCanvas.oncontextmenu = e => {
   e.preventDefault();
 };
 
-// variables for the brush and controls
+// variables for brush, canvas and controls
 let isDrawing = false;
 let isMouseDown = false;
 let x = 0;
 let y = 0;
+const defaultCanvasWidth = 500;
+const defaultCanvasHeight = 400;
+drawingCanvas.width = defaultCanvasWidth;
+drawingCanvas.height = defaultCanvasHeight;
+const minCanvasSize = 1;
+const maxCanvasSize = 1000;
 const minBrushSize = 1;
 const maxBrushSize = 20;
 let brushSize = 1;
@@ -79,6 +85,20 @@ function clearCanvas() {
   if (confirm("This action will DESTROY your beautiful drawing! You sure?")) {
     context.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
   }
+}
+
+// canvas size selects
+const canvasWidthSelect = document.getElementById("canvasWidthSelect");
+canvasWidthSelect.value = drawingCanvas.width;
+const canvasHeightSelect = document.getElementById("canvasHeightSelect");
+canvasHeightSelect.value = drawingCanvas.height;
+function setCanvasWidth() {
+  canvasWidthSelect.value = clamp(canvasWidthSelect.value, minCanvasSize, maxCanvasSize);
+  drawingCanvas.width = canvasWidthSelect.value;
+}
+function setCanvasHeight() {
+  canvasHeightSelect.value = clamp(canvasHeightSelect.value, minCanvasSize, maxCanvasSize);
+  drawingCanvas.height = canvasHeightSelect.value;
 }
 
 // DRAWING
