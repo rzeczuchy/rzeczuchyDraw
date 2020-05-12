@@ -76,11 +76,12 @@ function cacheImage() {
 
 // clear button
 function clearCanvas() {
-  if (confirm("This action will OBLITERATE your beautiful drawing! You sure?")) {
+  if (confirm("This action will DESTROY your beautiful drawing! You sure?")) {
     context.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
   }
 }
 
+// DRAWING
 // start drawing a shape
 function startDrawing(e) {
   isDrawing = true;
@@ -127,6 +128,7 @@ function drawPoint(x, y) {
   context.closePath();
 }
 
+// UTILITY
 // get x position of cursor
 function getCursorXPos(e) {
   const rect = drawingCanvas.getBoundingClientRect();
