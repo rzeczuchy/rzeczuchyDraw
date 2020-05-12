@@ -93,12 +93,16 @@ canvasWidthSelect.value = drawingCanvas.width;
 const canvasHeightSelect = document.getElementById("canvasHeightSelect");
 canvasHeightSelect.value = drawingCanvas.height;
 function setCanvasWidth() {
-  canvasWidthSelect.value = clamp(canvasWidthSelect.value, minCanvasSize, maxCanvasSize);
-  drawingCanvas.width = canvasWidthSelect.value;
+  if (confirm("This action will clear the canvas. Are you sure?")) {
+    canvasWidthSelect.value = clamp(canvasWidthSelect.value, minCanvasSize, maxCanvasSize);
+    drawingCanvas.width = canvasWidthSelect.value;
+  }
 }
 function setCanvasHeight() {
-  canvasHeightSelect.value = clamp(canvasHeightSelect.value, minCanvasSize, maxCanvasSize);
-  drawingCanvas.height = canvasHeightSelect.value;
+  if (confirm("This action will clear the canvas. Are you sure?")) {
+    canvasHeightSelect.value = clamp(canvasHeightSelect.value, minCanvasSize, maxCanvasSize);
+    drawingCanvas.height = canvasHeightSelect.value;
+  }
 }
 
 // DRAWING
