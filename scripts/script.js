@@ -41,6 +41,11 @@ drawingCanvas.oncontextmenu = e => {
   e.preventDefault();
 };
 
+// clearing canvas to white on download
+window.onload = function() {
+  drawRectangle(0, 0, drawingCanvas.width, drawingCanvas.height, "#ffffff");
+};
+
 // variables for brush, canvas and controls
 let isDrawing = false;
 let isMouseDown = false;
@@ -84,6 +89,7 @@ function cacheImage() {
 function clearCanvas() {
   if (confirm("This action will DESTROY your beautiful drawing! You sure?")) {
     context.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+    drawRectangle(0, 0, drawingCanvas.width, drawingCanvas.height, "#ffffff");
   }
 }
 
@@ -149,6 +155,14 @@ function drawPoint(x, y) {
   context.fillRect(x - halfBrushSize, y - halfBrushSize,
     brushSize, brushSize);
   context.fill();
+  context.closePath();
+}
+
+function drawRectangle(x, y, width, height, color) {
+  context.beginPath();
+  context.fillStyle = color;
+  context.fillRect(x, y, width, height);
+  context.fill;
   context.closePath();
 }
 
