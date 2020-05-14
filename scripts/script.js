@@ -9,29 +9,33 @@ drawingCanvas.style.cursor = "crosshair";
 
 // defining event listeners for mouse
 drawingCanvas.addEventListener("mousedown", e => {
-  startDrawing(e);
+  if (typeof currentTool !== "undefined" && currentTool != null) {
+    currentTool.onMouseDown(e);
+  }
   isMouseDown = true;
 });
 
 drawingCanvas.addEventListener("mousemove", e => {
-  if (isDrawing) {
-    draw(e);
+  if (typeof currentTool !== "undefined" && currentTool != null) {
+    currentTool.onMouseMove(e);
   }
 });
 
 drawingCanvas.addEventListener("mouseleave", e => {
-  stopDrawing(e);
+  if (typeof currentTool !== "undefined" && currentTool != null) {
+    currentTool.onMouseLeave(e);
+  }
 });
 
 drawingCanvas.addEventListener("mouseenter", e => {
-  if (isMouseDown) {
-    startDrawing(e);
+  if (typeof currentTool !== "undefined" && currentTool != null) {
+    currentTool.onMouseEnter(e);
   }
 });
 
 window.addEventListener("mouseup", e => {
-  if (isDrawing) {
-    stopDrawing(e);
+  if (typeof currentTool !== "undefined" && currentTool != null) {
+    currentTool.onMouseUp(e);
   }
   isMouseDown = false;
 });
@@ -41,7 +45,7 @@ drawingCanvas.oncontextmenu = e => {
   e.preventDefault();
 };
 
-// clearing canvas to white on download
+// clearing canvas to white on load
 window.onload = function() {
   drawRectangle(0, 0, drawingCanvas.width, drawingCanvas.height, "#ffffff");
 };
@@ -68,6 +72,11 @@ const brushColorSelect = document.getElementById("brushColorSelect");
 brushColorSelect.value = brushColor;
 function setBrushColor() {
   brushColor = brushColorSelect.value;
+}
+
+// color picker tools
+function switchToColorPicker() {
+  currentTool = colorPicker;
 }
 
 // brush size select
@@ -110,6 +119,73 @@ function setCanvasHeight() {
     drawingCanvas.height = canvasHeightSelect.value;
   }
 }
+
+// TOOLS
+class Tool {
+  constructor() {}
+  onMouseDown(e) {}
+  onMouseMove(e) {}
+  onMouseLeave(e) {}
+  onMouseEnter(e) {}
+  onMouseUp(e) {}
+}
+
+class Brush extends Tool {
+  constructor() {
+    super();
+  }
+  onMouseDown(e) {
+    startDrawing(e);
+  }
+  onMouseMove(e) {
+    if (isDrawing) {
+      draw(e);
+    }
+  }
+  onMouseLeave(e) {
+    stopDrawing(e);
+  }
+  onMouseEnter(e) {
+    if (isMouseDown) {
+      startDrawing(e);
+    }
+  }
+  onMouseUp(e) {
+    if (isDrawing) {
+      stopDrawing(e);
+    }
+  }
+}
+
+class ColorPicker extends Tool {
+  constructor() {
+    super();
+  }
+  onMouseDown(e) {
+    this.pickColor(e);
+  }
+  onMouseMove(e) {
+    if (isMouseDown) {
+      this.pickColor(e);
+    }
+  }
+  onMouseLeave(e) {}
+  onMouseEnter(e) {}
+  onMouseUp(e) {
+    currentTool = brush;
+  }
+  pickColor(e) {
+    const imgData = context.getImageData(getCursorXPos(e),
+      getCursorYPos(e), 1, 1);
+    brushColorSelect.value = getHexFromRgb(imgData.data[0], imgData.data[1],
+      imgData.data[2]);
+    setBrushColor();
+  }
+}
+
+const brush = new Brush();
+const colorPicker = new ColorPicker();
+let currentTool = brush;
 
 // DRAWING
 // start drawing a shape
@@ -179,7 +255,13 @@ function getCursorYPos(e) {
   return event.clientY - rect.top;
 }
 
-//clamp number to given values
+// clamp number to given values
 function clamp(number, min, max) {
   return Math.min(Math.max(number, min), max);
+}
+
+// convert rgb color to hex
+// from Stack Overflow https://stackoverflow.com/a/5623914/2849127
+function getHexFromRgb(r, g, b) {
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
