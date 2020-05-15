@@ -70,6 +70,7 @@ let brushColor = "#ff0066";
 // color picker
 const brushColorSelect = document.getElementById("brushColorSelect");
 brushColorSelect.value = brushColor;
+
 function setBrushColor() {
   brushColor = brushColorSelect.value;
 }
@@ -82,6 +83,7 @@ function switchToColorPicker() {
 // brush size select
 const brushSizeSelect = document.getElementById("brushSizeSelect");
 brushSizeSelect.value = brushSize;
+
 function setBrushSize() {
   brushSizeSelect.value = clamp(brushSizeSelect.value, minBrushSize, maxBrushSize);
   brushSize = brushSizeSelect.value;
@@ -90,6 +92,7 @@ function setBrushSize() {
 // save button
 const saveButton = document.getElementById("saveButton");
 saveButton.setAttribute("download", "drawing.png");
+
 function cacheImage() {
   saveButton.setAttribute('href', drawingCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
 }
@@ -97,8 +100,8 @@ function cacheImage() {
 // clear button
 function clearCanvas() {
   if (confirm("This action will DESTROY your beautiful drawing! You sure?")) {
-    context.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-    drawRectangle(0, 0, drawingCanvas.width, drawingCanvas.height, "#ffffff");
+    saveCanvasState();
+    clearToColor("#ffffff");
   }
 }
 
@@ -107,16 +110,57 @@ const canvasWidthSelect = document.getElementById("canvasWidthSelect");
 canvasWidthSelect.value = drawingCanvas.width;
 const canvasHeightSelect = document.getElementById("canvasHeightSelect");
 canvasHeightSelect.value = drawingCanvas.height;
+
 function setCanvasWidth() {
   if (confirm("This action will clear the canvas. Are you sure?")) {
     canvasWidthSelect.value = clamp(canvasWidthSelect.value, minCanvasSize, maxCanvasSize);
     drawingCanvas.width = canvasWidthSelect.value;
+    clearToColor("#ffffff");
+    clearHistory();
   }
 }
+
 function setCanvasHeight() {
   if (confirm("This action will clear the canvas. Are you sure?")) {
     canvasHeightSelect.value = clamp(canvasHeightSelect.value, minCanvasSize, maxCanvasSize);
     drawingCanvas.height = canvasHeightSelect.value;
+    clearToColor("#ffffff");
+    clearHistory();
+  }
+}
+
+// undo/redo buttons
+let toUndo = [];
+let toRedo = [];
+const maxHistorySize = 3;
+
+function saveCanvasState() {
+  const currentState = new Image();
+  currentState.src = drawingCanvas.toDataURL();
+
+  if (toUndo.length >= maxHistorySize) {
+    toUndo.splice(0, 1);
+  }
+
+  toUndo.push(currentState);
+  toRedo.length = 0;
+}
+
+function undo() {
+  if (typeof toUndo !== 'undefined' && toUndo.length > 0) {
+    const currentState = new Image();
+    currentState.src = drawingCanvas.toDataURL();
+    toRedo.push(currentState);
+    context.drawImage(toUndo.pop(), 0, 0);
+  }
+}
+
+function redo() {
+  if (typeof toRedo !== 'undefined' && toRedo.length > 0) {
+    const currentState = new Image();
+    currentState.src = drawingCanvas.toDataURL();
+    toUndo.push(currentState);
+    context.drawImage(toRedo.pop(), 0, 0);
   }
 }
 
@@ -135,25 +179,64 @@ class Brush extends Tool {
     super();
   }
   onMouseDown(e) {
-    startDrawing(e);
+    this.startDrawing(e);
   }
   onMouseMove(e) {
     if (isDrawing) {
-      draw(e);
+      this.draw(e);
     }
   }
   onMouseLeave(e) {
-    stopDrawing(e);
+    this.stopDrawing(e);
   }
   onMouseEnter(e) {
     if (isMouseDown) {
-      startDrawing(e);
+      this.startDrawing(e);
     }
   }
   onMouseUp(e) {
     if (isDrawing) {
-      stopDrawing(e);
+      this.stopDrawing(e);
     }
+  }
+  startDrawing(e) {
+    saveCanvasState();
+    isDrawing = true;
+    x = e.offsetX;
+    y = e.offsetY;
+    this.drawPoint(x, y);
+  }
+  draw(e) {
+    this.drawLine(x, y, e.offsetX, e.offsetY);
+    x = e.offsetX;
+    y = e.offsetY;
+  }
+  stopDrawing(e) {
+    if (isDrawing) {
+      this.drawLine(x, y, e.offsetX, e.offsetY);
+      cacheImage();
+    }
+    x = 0;
+    y = 0;
+    isDrawing = false;
+  }
+  drawLine(x1, y1, x2, y2) {
+    context.beginPath();
+    context.strokeStyle = brushColor;
+    context.lineWidth = brushSize;
+    context.moveTo(x1, y1);
+    context.lineTo(x2, y2);
+    context.stroke();
+    context.closePath();
+  }
+  drawPoint(x, y) {
+    const halfBrushSize = Math.floor(brushSize / 2);
+    context.beginPath();
+    context.fillStyle = brushColor;
+    context.fillRect(x - halfBrushSize, y - halfBrushSize,
+      brushSize, brushSize);
+    context.fill();
+    context.closePath();
   }
 }
 
@@ -187,53 +270,8 @@ const brush = new Brush();
 const colorPicker = new ColorPicker();
 let currentTool = brush;
 
-// DRAWING
-// start drawing a shape
-function startDrawing(e) {
-  isDrawing = true;
-  x = e.offsetX;
-  y = e.offsetY;
-  drawPoint(x, y);
-}
-
-// draw shapes on canvas
-function draw(e) {
-  drawLine(x, y, e.offsetX, e.offsetY);
-  x = e.offsetX;
-  y = e.offsetY;
-}
-
-// stop drawing a shape
-function stopDrawing(e) {
-  if (isDrawing) {
-    drawLine(x, y, e.offsetX, e.offsetY);
-    cacheImage();
-  }
-  x = 0;
-  y = 0;
-  isDrawing = false;
-}
-
-function drawLine(x1, y1, x2, y2) {
-  context.beginPath();
-  context.strokeStyle = brushColor;
-  context.lineWidth = brushSize;
-  context.moveTo(x1, y1);
-  context.lineTo(x2, y2);
-  context.stroke();
-  context.closePath();
-}
-
-function drawPoint(x, y) {
-  const halfBrushSize = Math.floor(brushSize / 2);
-  context.beginPath();
-  context.fillStyle = brushColor;
-  context.fillRect(x - halfBrushSize, y - halfBrushSize,
-    brushSize, brushSize);
-  context.fill();
-  context.closePath();
-}
-
+// UTILITY
+// draw a rectangle on canvas
 function drawRectangle(x, y, width, height, color) {
   context.beginPath();
   context.fillStyle = color;
@@ -242,7 +280,15 @@ function drawRectangle(x, y, width, height, color) {
   context.closePath();
 }
 
-// UTILITY
+function clearToColor(color) {
+  drawRectangle(0, 0, drawingCanvas.width, drawingCanvas.height, color);
+}
+
+function clearHistory() {
+  toUndo.length = 0;
+  toRedo.length = 0;
+}
+
 // get x position of cursor
 function getCursorXPos(e) {
   const rect = drawingCanvas.getBoundingClientRect();
