@@ -15,10 +15,6 @@ button {
   font-family: "Courier New";
 }
 
-.full-width-button {
-  width: 100%;
-}
-
 .footer {
   font-size: 75%;
   color: #808080;
@@ -35,6 +31,14 @@ button {
 .tools-container {
   max-width: 600px;
   margin: 0 auto;
+}
+
+.tools-container button {
+  width: 100%;
+}
+
+.tools-container .half-width {
+  width: 50%;
 }
 
 .tools-container input[type=number] {
@@ -54,4 +58,9 @@ button {
   margin: auto;
   width: 100%;
   text-align: left;
+}
+
+.tools-container .separator {
+  width: 1px;
+  background: #000000;
 }
