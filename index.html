@@ -27,7 +27,7 @@
         <td>Width:</td>
         <td><input id="canvasWidthSelect" type="number" /></td>
         <td><button id="applyCanvasWidth" type="button" name="button" onclick="setCanvasWidth()">Apply</button></td>
-        <td><button id="undoButton" class="full-width-button" type="button" name="button" onclick="undo()">Undo</button></td>
+        <td><button id="undoButton" class="full-width-button" type="button" name="button" onclick="undo()">Undo(z)</button></td>
         <td><a id="saveButton"><button class="full-width-button" type="button" name="button">Save</button></a></td>
       </tr>
       <tr>
@@ -37,14 +37,14 @@
         <td>Height:</td>
         <td><input id="canvasHeightSelect" type="number" /></td>
         <td><button id="applyCanvasWidth" type="button" name="button" onclick="setCanvasHeight()" >Apply</button></td>
-        <td><button id="redoButton" class="full-width-button" type="button" name="button" onclick="redo()">Redo</button></td>
+        <td><button id="redoButton" class="full-width-button" type="button" name="button" onclick="redo()">Redo(y)</button></td>
         <td><button id="clearButton" class="full-width-button" type="button" name="button" onclick="clearCanvas()">Clear</button></td>
       </tr>
     </table>
   </div>
   <canvas id="drawingCanvas" width="500" height="400"></canvas>
   <div class="footer">
-    <p>coded by <a href="https://twitter.com/rzeczuchy" target="_blank" rel="noopener noreferrer">rzeczuchy</a> (2020) ver 0.5</p>
+    <p>coded by <a href="https://twitter.com/rzeczuchy" target="_blank" rel="noopener noreferrer">rzeczuchy</a> (2020) ver 0.6</p>
   </div>
   <script src="scripts/script.js"></script>
 </body>

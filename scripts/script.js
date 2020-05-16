@@ -40,6 +40,11 @@ window.addEventListener("mouseup", e => {
   isMouseDown = false;
 });
 
+// defining event listeners for keyboard
+window.addEventListener("keyup", e => {
+  handleKeyInput(e);
+});
+
 // disabling canvas context menu
 drawingCanvas.oncontextmenu = e => {
   e.preventDefault();
@@ -269,6 +274,22 @@ class ColorPicker extends Tool {
 const brush = new Brush();
 const colorPicker = new ColorPicker();
 let currentTool = brush;
+
+// KEYBOARD SHORTCUTS
+function handleKeyInput(e) {
+  let charCode = event.charCode || event.keyCode;
+  console.log(String.fromCharCode(charCode));
+  switch(String.fromCharCode(charCode).toLowerCase()) {
+    case "z":
+      undo();
+      break;
+    case "y":
+      redo();
+      break;
+    default:
+      break;
+  }
+}
 
 // UTILITY
 // draw a rectangle on canvas
