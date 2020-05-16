@@ -278,7 +278,7 @@ let currentTool = brush;
 // KEYBOARD SHORTCUTS
 function handleKeyInput(e) {
   let charCode = event.charCode || event.keyCode;
-  console.log(String.fromCharCode(charCode));
+  
   switch(String.fromCharCode(charCode).toLowerCase()) {
     case "z":
       undo();
