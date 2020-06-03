@@ -240,28 +240,21 @@ class Brush extends Tool {
     y = 0;
     isDrawing = false;
   }
-  drawLine(x1, y1, x2, y2) {
-    switch (this.shape) {
-      case shapes.SQUARE:
-        this.drawSquareStroke(x1, y1, x2, y2);
-        break;
-      case shapes.ROUND:
-        break;
-      default:
-        break;
-    }
-  }
-  drawSquareStroke(x1, y1, x2, y2) {
-    const halfBrush = brushSize / 2;
-    const lower = brushSize > 1 ? -halfBrush : 0;
-    const higher = brushSize > 1 ? halfBrush : 1;
-    for (let i = lower; i < higher; i++)
-      for (let n = lower; n < higher; n++) {
-      context.beginPath();
-      context.strokeStyle = brushColor;
-      context.moveTo(x1 + i, y1 + n);
-      context.lineTo(x2 + i, y2 + n);
-      context.stroke();
+  // Bresenham's algorithm in JS taken from this answer:
+  // https://stackoverflow.com/a/4672319/13352934
+  drawLine(x0, y0, x1, y1) {
+    var dx = Math.abs(x1 - x0);
+    var dy = Math.abs(y1 - y0);
+    var sx = (x0 < x1) ? 1 : -1;
+    var sy = (y0 < y1) ? 1 : -1;
+    var err = dx - dy;
+
+    while(true) {
+      this.drawPoint(x0, y0);
+      if ((x0 === x1) && (y0 === y1)) break;
+      var e2 = 2 * err;
+      if (e2 > -dy) { err -= dy; x0  += sx; }
+      if (e2 < dx) { err += dx; y0  += sy; }
     }
   }
   drawPoint(x, y) {
@@ -270,6 +263,7 @@ class Brush extends Tool {
         this.drawSquarePoint(x, y);
         break;
       case shapes.ROUND:
+        this.drawRoundPoint(x, y);
         break;
       default:
         break;
@@ -281,6 +275,13 @@ class Brush extends Tool {
     context.fillStyle = brushColor;
     context.fillRect(x - halfBrush, y - halfBrush,
       brushSize, brushSize);
+    context.fill();
+  }
+  drawRoundPoint(x, y) {
+    const halfBrush = Math.ceil(brushSize / 2);
+    context.beginPath();
+    context.arc(x, y, halfBrush, 0, 2 * Math.PI);
+    context.fillStyle = brushColor;
     context.fill();
   }
 }
