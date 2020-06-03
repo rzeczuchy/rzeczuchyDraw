@@ -94,6 +94,20 @@ function setBrushSize() {
   brushSize = brushSizeSelect.value;
 }
 
+// brush shape selects
+const shapes = {
+  SQUARE: "square",
+  ROUND: "round",
+}
+
+function setSquareBrush() {
+  brush.shape = shapes.SQUARE;
+}
+
+function setRoundBrush() {
+  brush.shape = shapes.ROUND;
+}
+
 // save button
 const saveButton = document.getElementById("saveButton");
 saveButton.setAttribute("download", "drawing.png");
@@ -182,6 +196,7 @@ class Tool {
 class Brush extends Tool {
   constructor() {
     super();
+    this.shape = shapes.SQUARE;
   }
   onMouseDown(e) {
     this.startDrawing(e);
@@ -226,22 +241,47 @@ class Brush extends Tool {
     isDrawing = false;
   }
   drawLine(x1, y1, x2, y2) {
-    context.beginPath();
-    context.strokeStyle = brushColor;
-    context.lineWidth = brushSize;
-    context.moveTo(x1, y1);
-    context.lineTo(x2, y2);
-    context.stroke();
-    context.closePath();
+    switch (this.shape) {
+      case shapes.SQUARE:
+        this.drawSquareStroke(x1, y1, x2, y2);
+        break;
+      case shapes.ROUND:
+        break;
+      default:
+        break;
+    }
+  }
+  drawSquareStroke(x1, y1, x2, y2) {
+    const halfBrush = brushSize / 2;
+    const lower = brushSize > 1 ? -halfBrush : 0;
+    const higher = brushSize > 1 ? halfBrush : 1;
+    for (let i = lower; i < higher; i++)
+      for (let n = lower; n < higher; n++) {
+      context.beginPath();
+      context.strokeStyle = brushColor;
+      context.moveTo(x1 + i, y1 + n);
+      context.lineTo(x2 + i, y2 + n);
+      context.stroke();
+    }
   }
   drawPoint(x, y) {
-    const halfBrushSize = Math.floor(brushSize / 2);
+    switch (this.shape) {
+      case shapes.SQUARE:
+        this.drawSquarePoint(x, y);
+        break;
+      case shapes.ROUND:
+        break;
+      default:
+        break;
+    }
+  }
+  drawSquarePoint(x, y) {
+    const halfBrush = Math.ceil(brushSize / 2);
     context.beginPath();
     context.fillStyle = brushColor;
-    context.fillRect(x - halfBrushSize, y - halfBrushSize,
+    context.fillRect(x - halfBrush, y - halfBrush,
       brushSize, brushSize);
     context.fill();
-    context.closePath();
   }
 }
 
@@ -278,7 +318,7 @@ let currentTool = brush;
 // KEYBOARD SHORTCUTS
 function handleKeyInput(e) {
   let charCode = event.charCode || event.keyCode;
-  
+
   switch(String.fromCharCode(charCode).toLowerCase()) {
     case "z":
       undo();
@@ -298,7 +338,6 @@ function drawRectangle(x, y, width, height, color) {
   context.fillStyle = color;
   context.fillRect(x, y, width, height);
   context.fill;
-  context.closePath();
 }
 
 function clearToColor(color) {
