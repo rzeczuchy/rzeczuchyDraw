@@ -1,52 +1,154 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>rzeczuchyDraw</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <title>rzeczuchyDraw</title>
-  <link rel="stylesheet" href="css/styles.css">
-</head>
-
-<body>
-  <div class="tools-container">
-    <table>
-      <tr>
-        <th>Brush</th>
-        <th></th>
-        <th></th>
-        <th>Canvas</th>
-        <th></th>
-        <th></th>
-        <th>History</th>
-        <th>Drawing</th>
-      </tr>
-      <tr>
-        <td>Size:</td>
-        <td><input id="brushSizeSelect" type="number" oninput="setBrushSize()" /></td>
-        <td><button class="action-button half-width" type="button" name="button" onclick="setRoundBrush()">⚪</button><button class="action-button half-width" type="button" name="button" onclick="setSquareBrush()">◻</button></td>
-        <td>Width:</td>
-        <td><input id="canvasWidthSelect" type="number" /></td>
-        <td><button id="applyCanvasWidth" class="action-button" type="button" name="button" onclick="setCanvasWidth()">Apply</button></td>
-        <td><button id="undoButton" class="action-button" type="button" name="button" onclick="undo()">Undo(z)</button></td>
-        <td><a id="saveButton"><button class="action-button" type="button" name="button">Save</button></a></td>
-      </tr>
-      <tr>
-        <td>Color:</td>
-        <td><input id="brushColorSelect" type="color" oninput="setBrushColor()" /></td>
-        <td><button class="action-button" id="colorPickerButton" type="button" name="button" onclick="switchToColorPicker()">Pick</button></td>
-        <td>Height:</td>
-        <td><input id="canvasHeightSelect" type="number" /></td>
-        <td><button id="applyCanvasWidth" class="action-button"  type="button" name="button" onclick="setCanvasHeight()" >Apply</button></td>
-        <td><button id="redoButton" class="action-button" type="button" name="button" onclick="redo()">Redo(y)</button></td>
-        <td><button id="clearButton" class="action-button" type="button" name="button" onclick="clearCanvas()">Clear</button></td>
-      </tr>
-    </table>
-  </div>
-  <canvas id="drawingCanvas" width="500" height="400"></canvas>
-  <div class="footer">
-    <p>coded by <a href="https://github.com/rzeczuchy" target="_blank" rel="noopener noreferrer">rzeczuchy</a> (2020) ver 0.9</p>
-  </div>
-  <script src="scripts/script.js"></script>
-</body>
-
+  <body>
+    <div class="tools-container">
+      <table>
+        <tr>
+          <th>Brush</th>
+          <th></th>
+          <th></th>
+          <th>Canvas</th>
+          <th></th>
+          <th></th>
+          <th>History</th>
+          <th>Drawing</th>
+        </tr>
+        <tr>
+          <td>Size:</td>
+          <td>
+            <input
+              id="brushSizeSelect"
+              type="number"
+              oninput="setBrushSize()"
+            />
+          </td>
+          <td>
+            <button
+              class="action-button half-width"
+              type="button"
+              name="button"
+              onclick="setRoundBrush()"
+            >
+              ⚪</button
+            ><button
+              class="action-button half-width"
+              type="button"
+              name="button"
+              onclick="setSquareBrush()"
+            >
+              ◻
+            </button>
+          </td>
+          <td>Width:</td>
+          <td><input id="canvasWidthSelect" type="number" /></td>
+          <td>
+            <button
+              id="applyCanvasWidth"
+              class="action-button"
+              type="button"
+              name="button"
+              onclick="setCanvasWidth()"
+            >
+              Apply
+            </button>
+          </td>
+          <td>
+            <button
+              id="undoButton"
+              class="action-button"
+              type="button"
+              name="button"
+              onclick="undo()"
+            >
+              Undo(z)
+            </button>
+          </td>
+          <td>
+            <a id="saveButton"
+              ><button class="action-button" type="button" name="button">
+                Save
+              </button></a
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>Color:</td>
+          <td>
+            <input
+              id="brushColorSelect"
+              type="color"
+              oninput="setBrushColor()"
+            />
+          </td>
+          <td>
+            <button
+              class="action-button"
+              id="colorPickerButton"
+              type="button"
+              name="button"
+              onclick="switchToColorPicker()"
+            >
+              Pick
+            </button>
+          </td>
+          <td>Height:</td>
+          <td><input id="canvasHeightSelect" type="number" /></td>
+          <td>
+            <button
+              id="applyCanvasWidth"
+              class="action-button"
+              type="button"
+              name="button"
+              onclick="setCanvasHeight()"
+            >
+              Apply
+            </button>
+          </td>
+          <td>
+            <button
+              id="redoButton"
+              class="action-button"
+              type="button"
+              name="button"
+              onclick="redo()"
+            >
+              Redo(y)
+            </button>
+          </td>
+          <td>
+            <button
+              id="clearButton"
+              class="action-button"
+              type="button"
+              name="button"
+              onclick="clearCanvas()"
+            >
+              Clear
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <canvas id="drawingCanvas" width="500" height="400"></canvas>
+    <div class="footer">
+      <p>
+        coded by
+        <a
+          href="https://github.com/rzeczuchy"
+          target="_blank"
+          rel="noopener noreferrer"
+          >rzeczuchy</a
+        >
+        (2020) ver 1.0
+      </p>
+    </div>
+    <script src="scripts/script.js"></script>
+  </body>
 </html>
