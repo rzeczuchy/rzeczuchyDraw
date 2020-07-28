@@ -52,7 +52,8 @@ canvas.oncontextmenu = (e) => {
 
 // clearing canvas to white on load
 window.onload = () => {
-  drawRectangle(0, 0, canvas.width, canvas.height, "#ffffff");
+  clearToColor("#ffffff");
+  initialize();
 };
 
 // variables for brush, canvas and controls
@@ -66,14 +67,14 @@ canvas.width = defaultCanvasWidth;
 canvas.height = defaultCanvasHeight;
 const minCanvasSize = 1;
 const maxCanvasSize = 1000;
-const minBrushSize = 1;
-const maxBrushSize = 20;
-let brushSize = 1;
-let brushColor = "#ff0066";
-const brushShapes = {
-  SQUARE: "square",
-  ROUND: "round",
-};
+let brush;
+let colorPicker;
+let currentTool;
+let toUndo = [];
+let toRedo = [];
+const maxHistorySize = 3;
+const brushColorSelect = document.getElementById("brushColorSelect");
+const brushSizeSelect = document.getElementById("brushSizeSelect");
 
 // TOOLS
 class Tool {
@@ -88,7 +89,15 @@ class Tool {
 class Brush extends Tool {
   constructor() {
     super();
-    this.shape = brushShapes.SQUARE;
+    this.color = "#ff0066";
+    this.minSize = 1;
+    this.maxSize = 20;
+    this.size = 1;
+    this.shapes = {
+      SQUARE: "square",
+      ROUND: "round",
+    };
+    this.shape = this.shapes.SQUARE;
   }
   onMouseDown(e) {
     this.startDrawing(e);
@@ -157,10 +166,10 @@ class Brush extends Tool {
   }
   drawPoint(x, y) {
     switch (this.shape) {
-      case brushShapes.SQUARE:
+      case this.shapes.SQUARE:
         this.drawSquarePoint(x, y);
         break;
-      case brushShapes.ROUND:
+      case this.shapes.ROUND:
         this.drawRoundPoint(x, y);
         break;
       default:
@@ -168,17 +177,17 @@ class Brush extends Tool {
     }
   }
   drawSquarePoint(x, y) {
-    const halfBrush = Math.ceil(brushSize / 2);
+    const halfBrush = Math.ceil(this.size / 2);
     context.beginPath();
-    context.fillStyle = brushColor;
-    context.fillRect(x - halfBrush, y - halfBrush, brushSize, brushSize);
+    context.fillStyle = this.color;
+    context.fillRect(x - halfBrush, y - halfBrush, this.size, this.size);
     context.fill();
   }
   drawRoundPoint(x, y) {
-    const halfBrush = Math.ceil(brushSize / 2);
+    const halfBrush = Math.ceil(this.size / 2);
     context.beginPath();
     context.arc(x, y, halfBrush, 0, 2 * Math.PI);
-    context.fillStyle = brushColor;
+    context.fillStyle = this.color;
     context.fill();
   }
 }
@@ -216,13 +225,20 @@ class ColorPicker extends Tool {
   }
 }
 
+// set variables to initial values
+const initialize = () => {
+  brush = new Brush();
+  colorPicker = new ColorPicker();
+  currentTool = brush;
+  brushColorSelect.value = brush.color;
+  brushSizeSelect.value = brush.size;
+};
+
 // UI ELEMENTS
 // color picker
-const brushColorSelect = document.getElementById("brushColorSelect");
-brushColorSelect.value = brushColor;
 
 const setBrushColor = () => {
-  brushColor = brushColorSelect.value;
+  brush.color = brushColorSelect.value;
 };
 
 // color picker tools
@@ -230,25 +246,21 @@ const switchToColorPicker = () => {
   currentTool = colorPicker;
 };
 
-// brush size select
-const brushSizeSelect = document.getElementById("brushSizeSelect");
-brushSizeSelect.value = brushSize;
-
 const setBrushSize = () => {
   brushSizeSelect.value = clamp(
     brushSizeSelect.value,
-    minBrushSize,
-    maxBrushSize
+    brush.minSize,
+    brush.maxSize
   );
-  brushSize = brushSizeSelect.value;
+  brush.size = brushSizeSelect.value;
 };
 
 const setSquareBrush = () => {
-  brush.shape = brushShapes.SQUARE;
+  brush.shape = brush.shapes.SQUARE;
 };
 
 const setRoundBrush = () => {
-  brush.shape = brushShapes.ROUND;
+  brush.shape = brush.shapes.ROUND;
 };
 
 // save button
@@ -302,11 +314,6 @@ const setCanvasHeight = () => {
   }
 };
 
-// undo/redo buttons
-let toUndo = [];
-let toRedo = [];
-const maxHistorySize = 3;
-
 const saveCanvasState = () => {
   const currentState = new Image();
   currentState.src = canvas.toDataURL();
@@ -336,10 +343,6 @@ const redo = () => {
     context.drawImage(toRedo.pop(), 0, 0);
   }
 };
-
-const brush = new Brush();
-const colorPicker = new ColorPicker();
-let currentTool = brush;
 
 // KEYBOARD SHORTCUTS
 const handleKeyInput = (e) => {
