@@ -1,13 +1,30 @@
 "use strict";
 
-// defining canvas and context
+// CONSTANTS, VARIABLES
 const canvas = document.getElementById("drawingCanvas");
 const context = canvas.getContext("2d");
+const defaultCanvasWidth = 500;
+const defaultCanvasHeight = 400;
+const minCanvasSize = 1;
+const maxCanvasSize = 1000;
+const maxHistorySize = 3;
+const brushColorSelect = document.getElementById("brushColorSelect");
+const brushSizeSelect = document.getElementById("brushSizeSelect");
+const saveButton = document.getElementById("saveButton");
+const canvasWidthSelect = document.getElementById("canvasWidthSelect");
+const canvasHeightSelect = document.getElementById("canvasHeightSelect");
 
-// defining default style for the cursor
-canvas.style.cursor = "crosshair";
+let isDrawing = false;
+let isMouseDown = false;
+let x = 0;
+let y = 0;
+let brush;
+let colorPicker;
+let currentTool;
+let toUndo = [];
+let toRedo = [];
 
-// defining event listeners for mouse
+// EVENT LISTENERS
 canvas.addEventListener("mousedown", (e) => {
   if (typeof currentTool !== "undefined" && currentTool != null) {
     currentTool.onMouseDown(e);
@@ -40,43 +57,19 @@ window.addEventListener("mouseup", (e) => {
   isMouseDown = false;
 });
 
-// defining event listeners for keyboard
 window.addEventListener("keyup", (e) => {
   handleKeyInput(e);
 });
 
-// disabling canvas context menu
 canvas.oncontextmenu = (e) => {
   e.preventDefault();
 };
 
-// clearing canvas to white on load
 window.onload = () => {
-  clearToColor("#ffffff");
   initialize();
 };
 
-// variables for brush, canvas and controls
-let isDrawing = false;
-let isMouseDown = false;
-let x = 0;
-let y = 0;
-const defaultCanvasWidth = 500;
-const defaultCanvasHeight = 400;
-canvas.width = defaultCanvasWidth;
-canvas.height = defaultCanvasHeight;
-const minCanvasSize = 1;
-const maxCanvasSize = 1000;
-let brush;
-let colorPicker;
-let currentTool;
-let toUndo = [];
-let toRedo = [];
-const maxHistorySize = 3;
-const brushColorSelect = document.getElementById("brushColorSelect");
-const brushSizeSelect = document.getElementById("brushSizeSelect");
-
-// TOOLS
+// CLASS DEFINITIONS
 class Tool {
   constructor() {}
   onMouseDown(e) {}
@@ -225,23 +218,26 @@ class ColorPicker extends Tool {
   }
 }
 
-// set variables to initial values
+// FUNCTIONS
 const initialize = () => {
+  canvas.width = defaultCanvasWidth;
+  canvas.height = defaultCanvasHeight;
+  canvas.style.cursor = "crosshair";
+  clearToColor("#ffffff");
   brush = new Brush();
   colorPicker = new ColorPicker();
   currentTool = brush;
   brushColorSelect.value = brush.color;
   brushSizeSelect.value = brush.size;
+  saveButton.setAttribute("download", "drawing.png");
+  canvasWidthSelect.value = canvas.width;
+  canvasHeightSelect.value = canvas.height;
 };
-
-// UI ELEMENTS
-// color picker
 
 const setBrushColor = () => {
   brush.color = brushColorSelect.value;
 };
 
-// color picker tools
 const switchToColorPicker = () => {
   currentTool = colorPicker;
 };
@@ -263,10 +259,6 @@ const setRoundBrush = () => {
   brush.shape = brush.shapes.ROUND;
 };
 
-// save button
-const saveButton = document.getElementById("saveButton");
-saveButton.setAttribute("download", "drawing.png");
-
 const cacheImage = () => {
   saveButton.setAttribute(
     "href",
@@ -274,19 +266,12 @@ const cacheImage = () => {
   );
 };
 
-// clear button
 const clearCanvas = () => {
   if (confirm("This action will DESTROY your beautiful drawing! You sure?")) {
     saveCanvasState();
     clearToColor("#ffffff");
   }
 };
-
-// canvas size selects
-const canvasWidthSelect = document.getElementById("canvasWidthSelect");
-canvasWidthSelect.value = canvas.width;
-const canvasHeightSelect = document.getElementById("canvasHeightSelect");
-canvasHeightSelect.value = canvas.height;
 
 const setCanvasWidth = () => {
   if (confirm("This action will clear the canvas. Are you sure?")) {
@@ -344,7 +329,6 @@ const redo = () => {
   }
 };
 
-// KEYBOARD SHORTCUTS
 const handleKeyInput = (e) => {
   let charCode = event.charCode || event.keyCode;
 
@@ -360,8 +344,6 @@ const handleKeyInput = (e) => {
   }
 };
 
-// UTILITY
-// draw a rectangle on canvas
 const drawRectangle = (x, y, width, height, color) => {
   context.beginPath();
   context.fillStyle = color;
@@ -378,19 +360,16 @@ const clearHistory = () => {
   toRedo.length = 0;
 };
 
-// get x position of cursor
 const getCursorXPos = (e) => {
   const rect = canvas.getBoundingClientRect();
   return event.clientX - rect.left;
 };
 
-// get y position of cursor
 const getCursorYPos = (e) => {
   const rect = canvas.getBoundingClientRect();
   return event.clientY - rect.top;
 };
 
-// clamp number to given values
 const clamp = (number, min, max) => {
   return Math.min(Math.max(number, min), max);
 };
