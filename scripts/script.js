@@ -1,39 +1,39 @@
 "use strict";
 
 // defining canvas and context
-const drawingCanvas = document.getElementById("drawingCanvas");
-const context = drawingCanvas.getContext("2d");
+const canvas = document.getElementById("drawingCanvas");
+const context = canvas.getContext("2d");
 
 // defining default style for the cursor
-drawingCanvas.style.cursor = "crosshair";
+canvas.style.cursor = "crosshair";
 
 // defining event listeners for mouse
-drawingCanvas.addEventListener("mousedown", e => {
+canvas.addEventListener("mousedown", (e) => {
   if (typeof currentTool !== "undefined" && currentTool != null) {
     currentTool.onMouseDown(e);
   }
   isMouseDown = true;
 });
 
-drawingCanvas.addEventListener("mousemove", e => {
+canvas.addEventListener("mousemove", (e) => {
   if (typeof currentTool !== "undefined" && currentTool != null) {
     currentTool.onMouseMove(e);
   }
 });
 
-drawingCanvas.addEventListener("mouseleave", e => {
+canvas.addEventListener("mouseleave", (e) => {
   if (typeof currentTool !== "undefined" && currentTool != null) {
     currentTool.onMouseLeave(e);
   }
 });
 
-drawingCanvas.addEventListener("mouseenter", e => {
+canvas.addEventListener("mouseenter", (e) => {
   if (typeof currentTool !== "undefined" && currentTool != null) {
     currentTool.onMouseEnter(e);
   }
 });
 
-window.addEventListener("mouseup", e => {
+window.addEventListener("mouseup", (e) => {
   if (typeof currentTool !== "undefined" && currentTool != null) {
     currentTool.onMouseUp(e);
   }
@@ -41,18 +41,18 @@ window.addEventListener("mouseup", e => {
 });
 
 // defining event listeners for keyboard
-window.addEventListener("keyup", e => {
+window.addEventListener("keyup", (e) => {
   handleKeyInput(e);
 });
 
 // disabling canvas context menu
-drawingCanvas.oncontextmenu = e => {
+canvas.oncontextmenu = (e) => {
   e.preventDefault();
 };
 
 // clearing canvas to white on load
-window.onload = function() {
-  drawRectangle(0, 0, drawingCanvas.width, drawingCanvas.height, "#ffffff");
+window.onload = () => {
+  drawRectangle(0, 0, canvas.width, canvas.height, "#ffffff");
 };
 
 // variables for brush, canvas and controls
@@ -62,126 +62,18 @@ let x = 0;
 let y = 0;
 const defaultCanvasWidth = 500;
 const defaultCanvasHeight = 400;
-drawingCanvas.width = defaultCanvasWidth;
-drawingCanvas.height = defaultCanvasHeight;
+canvas.width = defaultCanvasWidth;
+canvas.height = defaultCanvasHeight;
 const minCanvasSize = 1;
 const maxCanvasSize = 1000;
 const minBrushSize = 1;
 const maxBrushSize = 20;
 let brushSize = 1;
 let brushColor = "#ff0066";
-
-// UI ELEMENTS
-// color picker
-const brushColorSelect = document.getElementById("brushColorSelect");
-brushColorSelect.value = brushColor;
-
-function setBrushColor() {
-  brushColor = brushColorSelect.value;
-}
-
-// color picker tools
-function switchToColorPicker() {
-  currentTool = colorPicker;
-}
-
-// brush size select
-const brushSizeSelect = document.getElementById("brushSizeSelect");
-brushSizeSelect.value = brushSize;
-
-function setBrushSize() {
-  brushSizeSelect.value = clamp(brushSizeSelect.value, minBrushSize, maxBrushSize);
-  brushSize = brushSizeSelect.value;
-}
-
-// brush shape selects
-const shapes = {
+const brushShapes = {
   SQUARE: "square",
   ROUND: "round",
-}
-
-function setSquareBrush() {
-  brush.shape = shapes.SQUARE;
-}
-
-function setRoundBrush() {
-  brush.shape = shapes.ROUND;
-}
-
-// save button
-const saveButton = document.getElementById("saveButton");
-saveButton.setAttribute("download", "drawing.png");
-
-function cacheImage() {
-  saveButton.setAttribute('href', drawingCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
-}
-
-// clear button
-function clearCanvas() {
-  if (confirm("This action will DESTROY your beautiful drawing! You sure?")) {
-    saveCanvasState();
-    clearToColor("#ffffff");
-  }
-}
-
-// canvas size selects
-const canvasWidthSelect = document.getElementById("canvasWidthSelect");
-canvasWidthSelect.value = drawingCanvas.width;
-const canvasHeightSelect = document.getElementById("canvasHeightSelect");
-canvasHeightSelect.value = drawingCanvas.height;
-
-function setCanvasWidth() {
-  if (confirm("This action will clear the canvas. Are you sure?")) {
-    canvasWidthSelect.value = clamp(canvasWidthSelect.value, minCanvasSize, maxCanvasSize);
-    drawingCanvas.width = canvasWidthSelect.value;
-    clearToColor("#ffffff");
-    clearHistory();
-  }
-}
-
-function setCanvasHeight() {
-  if (confirm("This action will clear the canvas. Are you sure?")) {
-    canvasHeightSelect.value = clamp(canvasHeightSelect.value, minCanvasSize, maxCanvasSize);
-    drawingCanvas.height = canvasHeightSelect.value;
-    clearToColor("#ffffff");
-    clearHistory();
-  }
-}
-
-// undo/redo buttons
-let toUndo = [];
-let toRedo = [];
-const maxHistorySize = 3;
-
-function saveCanvasState() {
-  const currentState = new Image();
-  currentState.src = drawingCanvas.toDataURL();
-
-  if (toUndo.length >= maxHistorySize) {
-    toUndo.splice(0, 1);
-  }
-
-  toUndo.push(currentState);
-  toRedo.length = 0;
-}
-
-function undo() {
-  if (typeof toUndo !== 'undefined' && toUndo.length > 0) {
-    const currentState = new Image();
-    currentState.src = drawingCanvas.toDataURL();
-    toRedo.push(currentState);
-    context.drawImage(toUndo.pop(), 0, 0);
-  }
-}
-
-function redo() {
-  if (typeof toRedo !== 'undefined' && toRedo.length > 0) {
-    const currentState = new Image();
-    currentState.src = drawingCanvas.toDataURL();
-    toUndo.push(currentState);
-    context.drawImage(toRedo.pop(), 0, 0);
-  }
-}
+};
 
 // TOOLS
 class Tool {
@@ -196,7 +88,7 @@ class Tool {
 class Brush extends Tool {
   constructor() {
     super();
-    this.shape = shapes.SQUARE;
+    this.shape = brushShapes.SQUARE;
   }
   onMouseDown(e) {
     this.startDrawing(e);
@@ -245,24 +137,30 @@ class Brush extends Tool {
   drawLine(x0, y0, x1, y1) {
     var dx = Math.abs(x1 - x0);
     var dy = Math.abs(y1 - y0);
-    var sx = (x0 < x1) ? 1 : -1;
-    var sy = (y0 < y1) ? 1 : -1;
+    var sx = x0 < x1 ? 1 : -1;
+    var sy = y0 < y1 ? 1 : -1;
     var err = dx - dy;
 
-    while(true) {
+    while (true) {
       this.drawPoint(x0, y0);
-      if ((x0 === x1) && (y0 === y1)) break;
+      if (x0 === x1 && y0 === y1) break;
       var e2 = 2 * err;
-      if (e2 > -dy) { err -= dy; x0  += sx; }
-      if (e2 < dx) { err += dx; y0  += sy; }
+      if (e2 > -dy) {
+        err -= dy;
+        x0 += sx;
+      }
+      if (e2 < dx) {
+        err += dx;
+        y0 += sy;
+      }
     }
   }
   drawPoint(x, y) {
     switch (this.shape) {
-      case shapes.SQUARE:
+      case brushShapes.SQUARE:
         this.drawSquarePoint(x, y);
         break;
-      case shapes.ROUND:
+      case brushShapes.ROUND:
         this.drawRoundPoint(x, y);
         break;
       default:
@@ -273,8 +171,7 @@ class Brush extends Tool {
     const halfBrush = Math.ceil(brushSize / 2);
     context.beginPath();
     context.fillStyle = brushColor;
-    context.fillRect(x - halfBrush, y - halfBrush,
-      brushSize, brushSize);
+    context.fillRect(x - halfBrush, y - halfBrush, brushSize, brushSize);
     context.fill();
   }
   drawRoundPoint(x, y) {
@@ -304,23 +201,151 @@ class ColorPicker extends Tool {
     currentTool = brush;
   }
   pickColor(e) {
-    const imgData = context.getImageData(getCursorXPos(e),
-      getCursorYPos(e), 1, 1);
-    brushColorSelect.value = getHexFromRgb(imgData.data[0], imgData.data[1],
-      imgData.data[2]);
+    const imgData = context.getImageData(
+      getCursorXPos(e),
+      getCursorYPos(e),
+      1,
+      1
+    );
+    brushColorSelect.value = getHexFromRgb(
+      imgData.data[0],
+      imgData.data[1],
+      imgData.data[2]
+    );
     setBrushColor();
   }
 }
+
+// UI ELEMENTS
+// color picker
+const brushColorSelect = document.getElementById("brushColorSelect");
+brushColorSelect.value = brushColor;
+
+const setBrushColor = () => {
+  brushColor = brushColorSelect.value;
+};
+
+// color picker tools
+const switchToColorPicker = () => {
+  currentTool = colorPicker;
+};
+
+// brush size select
+const brushSizeSelect = document.getElementById("brushSizeSelect");
+brushSizeSelect.value = brushSize;
+
+const setBrushSize = () => {
+  brushSizeSelect.value = clamp(
+    brushSizeSelect.value,
+    minBrushSize,
+    maxBrushSize
+  );
+  brushSize = brushSizeSelect.value;
+};
+
+const setSquareBrush = () => {
+  brush.shape = brushShapes.SQUARE;
+};
+
+const setRoundBrush = () => {
+  brush.shape = brushShapes.ROUND;
+};
+
+// save button
+const saveButton = document.getElementById("saveButton");
+saveButton.setAttribute("download", "drawing.png");
+
+const cacheImage = () => {
+  saveButton.setAttribute(
+    "href",
+    canvas.toDataURL("image/png").replace("image/png", "image/octet-stream")
+  );
+};
+
+// clear button
+const clearCanvas = () => {
+  if (confirm("This action will DESTROY your beautiful drawing! You sure?")) {
+    saveCanvasState();
+    clearToColor("#ffffff");
+  }
+};
+
+// canvas size selects
+const canvasWidthSelect = document.getElementById("canvasWidthSelect");
+canvasWidthSelect.value = canvas.width;
+const canvasHeightSelect = document.getElementById("canvasHeightSelect");
+canvasHeightSelect.value = canvas.height;
+
+const setCanvasWidth = () => {
+  if (confirm("This action will clear the canvas. Are you sure?")) {
+    canvasWidthSelect.value = clamp(
+      canvasWidthSelect.value,
+      minCanvasSize,
+      maxCanvasSize
+    );
+    canvas.width = canvasWidthSelect.value;
+    clearToColor("#ffffff");
+    clearHistory();
+  }
+};
+
+const setCanvasHeight = () => {
+  if (confirm("This action will clear the canvas. Are you sure?")) {
+    canvasHeightSelect.value = clamp(
+      canvasHeightSelect.value,
+      minCanvasSize,
+      maxCanvasSize
+    );
+    canvas.height = canvasHeightSelect.value;
+    clearToColor("#ffffff");
+    clearHistory();
+  }
+};
+
+// undo/redo buttons
+let toUndo = [];
+let toRedo = [];
+const maxHistorySize = 3;
+
+const saveCanvasState = () => {
+  const currentState = new Image();
+  currentState.src = canvas.toDataURL();
+
+  if (toUndo.length >= maxHistorySize) {
+    toUndo.splice(0, 1);
+  }
+
+  toUndo.push(currentState);
+  toRedo.length = 0;
+};
+
+const undo = () => {
+  if (typeof toUndo !== "undefined" && toUndo.length > 0) {
+    const currentState = new Image();
+    currentState.src = canvas.toDataURL();
+    toRedo.push(currentState);
+    context.drawImage(toUndo.pop(), 0, 0);
+  }
+};
+
+const redo = () => {
+  if (typeof toRedo !== "undefined" && toRedo.length > 0) {
+    const currentState = new Image();
+    currentState.src = canvas.toDataURL();
+    toUndo.push(currentState);
+    context.drawImage(toRedo.pop(), 0, 0);
+  }
+};
 
 const brush = new Brush();
 const colorPicker = new ColorPicker();
 let currentTool = brush;
 
 // KEYBOARD SHORTCUTS
-function handleKeyInput(e) {
+const handleKeyInput = (e) => {
   let charCode = event.charCode || event.keyCode;
 
-  switch(String.fromCharCode(charCode).toLowerCase()) {
+  switch (String.fromCharCode(charCode).toLowerCase()) {
     case "z":
       undo();
       break;
@@ -330,45 +355,45 @@ function handleKeyInput(e) {
     default:
       break;
   }
-}
+};
 
 // UTILITY
 // draw a rectangle on canvas
-function drawRectangle(x, y, width, height, color) {
+const drawRectangle = (x, y, width, height, color) => {
   context.beginPath();
   context.fillStyle = color;
   context.fillRect(x, y, width, height);
   context.fill;
-}
+};
 
-function clearToColor(color) {
-  drawRectangle(0, 0, drawingCanvas.width, drawingCanvas.height, color);
-}
+const clearToColor = (color) => {
+  drawRectangle(0, 0, canvas.width, canvas.height, color);
+};
 
-function clearHistory() {
+const clearHistory = () => {
   toUndo.length = 0;
   toRedo.length = 0;
-}
+};
 
 // get x position of cursor
-function getCursorXPos(e) {
-  const rect = drawingCanvas.getBoundingClientRect();
+const getCursorXPos = (e) => {
+  const rect = canvas.getBoundingClientRect();
   return event.clientX - rect.left;
-}
+};
 
 // get y position of cursor
-function getCursorYPos(e) {
-  const rect = drawingCanvas.getBoundingClientRect();
+const getCursorYPos = (e) => {
+  const rect = canvas.getBoundingClientRect();
   return event.clientY - rect.top;
-}
+};
 
 // clamp number to given values
-function clamp(number, min, max) {
+const clamp = (number, min, max) => {
   return Math.min(Math.max(number, min), max);
-}
+};
 
 // convert rgb color to hex
 // from Stack Overflow https://stackoverflow.com/a/5623914/2849127
-function getHexFromRgb(r, g, b) {
+const getHexFromRgb = (r, g, b) => {
   return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-}
+};
