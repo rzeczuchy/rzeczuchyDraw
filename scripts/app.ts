@@ -189,14 +189,14 @@ class Brush extends Tool {
     }
   }
   drawSquarePoint(x: number, y: number): void {
-    const halfBrush = Math.ceil(this.size / 2);
+    const halfBrush: number = Math.ceil(this.size / 2);
     context.beginPath();
     context.fillStyle = this.color;
     context.fillRect(x - halfBrush, y - halfBrush, this.size, this.size);
     context.fill();
   }
   drawRoundPoint(x: number, y: number): void {
-    const halfBrush = Math.ceil(this.size / 2);
+    const halfBrush: number = Math.ceil(this.size / 2);
     context.beginPath();
     context.arc(x, y, halfBrush, 0, 2 * Math.PI);
     context.fillStyle = this.color;
@@ -386,12 +386,12 @@ const clearHistory = (): void => {
 };
 
 const getCursorXPos = (e: MouseEvent): number => {
-  const rect = canvas.getBoundingClientRect();
+  const rect: DOMRect = canvas.getBoundingClientRect();
   return e.clientX - rect.left;
 };
 
 const getCursorYPos = (e: MouseEvent): number => {
-  const rect = canvas.getBoundingClientRect();
+  const rect: DOMRect = canvas.getBoundingClientRect();
   return e.clientY - rect.top;
 };
 
