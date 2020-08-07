@@ -238,7 +238,7 @@ var switchToColorPicker = function () {
     currentTool = colorPicker;
 };
 var setBrushSize = function () {
-    brushSizeSelect.value = clamp(brushSizeSelect.value, brush.minSize, brush.maxSize).toString();
+    brushSizeSelect.value = clamp(parseInt(brushSizeSelect.value), brush.minSize, brush.maxSize).toString();
     brush.size = parseInt(brushSizeSelect.value);
 };
 var setSquareBrush = function () {
@@ -258,7 +258,7 @@ var clearCanvas = function () {
 };
 var setCanvasWidth = function () {
     if (confirm("This action will clear the canvas. Are you sure?")) {
-        canvasWidthSelect.value = clamp(canvasWidthSelect.value, minCanvasSize, maxCanvasSize).toString();
+        canvasWidthSelect.value = clamp(parseInt(canvasWidthSelect.value), minCanvasSize, maxCanvasSize).toString();
         canvas.width = parseInt(canvasWidthSelect.value);
         clearToColor("#ffffff");
         clearHistory();
@@ -266,7 +266,7 @@ var setCanvasWidth = function () {
 };
 var setCanvasHeight = function () {
     if (confirm("This action will clear the canvas. Are you sure?")) {
-        canvasHeightSelect.value = clamp(canvasHeightSelect.value, minCanvasSize, maxCanvasSize).toString();
+        canvasHeightSelect.value = clamp(parseInt(canvasHeightSelect.value), minCanvasSize, maxCanvasSize).toString();
         canvas.height = parseInt(canvasHeightSelect.value);
         clearToColor("#ffffff");
         clearHistory();

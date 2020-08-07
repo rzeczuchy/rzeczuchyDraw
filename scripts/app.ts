@@ -222,7 +222,7 @@ class ColorPicker extends Tool {
     currentTool = brush;
   }
   pickColor(e: MouseEvent): void {
-    const imgData = context.getImageData(
+    const imgData: ImageData = context.getImageData(
       getCursorXPos(e),
       getCursorYPos(e),
       1,
@@ -263,7 +263,7 @@ const switchToColorPicker = (): void => {
 
 const setBrushSize = (): void => {
   brushSizeSelect.value = clamp(
-    brushSizeSelect.value,
+    parseInt(brushSizeSelect.value),
     brush.minSize,
     brush.maxSize
   ).toString();
@@ -295,7 +295,7 @@ const clearCanvas = (): void => {
 const setCanvasWidth = (): void => {
   if (confirm("This action will clear the canvas. Are you sure?")) {
     canvasWidthSelect.value = clamp(
-      canvasWidthSelect.value,
+      parseInt(canvasWidthSelect.value),
       minCanvasSize,
       maxCanvasSize
     ).toString();
@@ -308,7 +308,7 @@ const setCanvasWidth = (): void => {
 const setCanvasHeight = (): void => {
   if (confirm("This action will clear the canvas. Are you sure?")) {
     canvasHeightSelect.value = clamp(
-      canvasHeightSelect.value,
+      parseInt(canvasHeightSelect.value),
       minCanvasSize,
       maxCanvasSize
     ).toString();
@@ -363,7 +363,13 @@ const handleKeyInput = (e: KeyboardEvent): void => {
   }
 };
 
-const drawRectangle = (x, y, width, height, color): void => {
+const drawRectangle = (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  color: string
+): void => {
   context.beginPath();
   context.fillStyle = color;
   context.fillRect(x, y, width, height);
@@ -389,12 +395,12 @@ const getCursorYPos = (e: MouseEvent): number => {
   return e.clientY - rect.top;
 };
 
-const clamp = (number, min, max): number => {
+const clamp = (number: number, min: number, max: number): number => {
   return Math.min(Math.max(number, min), max);
 };
 
 // convert rgb color to hex
 // from Stack Overflow https://stackoverflow.com/a/5623914/2849127
-const getHexFromRgb = (r, g, b): string => {
+const getHexFromRgb = (r: number, g: number, b: number): string => {
   return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 };
