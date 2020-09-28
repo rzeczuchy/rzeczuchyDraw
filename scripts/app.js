@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 // CONSTANTS, VARIABLES, ENUMS
+var darkmodeButton = (document.getElementById("darkmodeButton"));
 var canvas = (document.getElementById("drawingCanvas"));
 var context = canvas.getContext("2d");
 var defaultCanvasWidth = 500;
@@ -34,6 +35,7 @@ var colorPicker;
 var currentTool;
 var toUndo = [];
 var toRedo = [];
+var darkmode = document.body.classList.contains("dark-mode");
 var BrushShape;
 (function (BrushShape) {
     BrushShape[BrushShape["Square"] = 0] = "Square";
@@ -218,6 +220,7 @@ var ColorPicker = /** @class */ (function (_super) {
 }(Tool));
 // FUNCTIONS
 var initialize = function () {
+    updateDarkmodeButton();
     canvas.width = defaultCanvasWidth;
     canvas.height = defaultCanvasHeight;
     canvas.style.cursor = "crosshair";
@@ -230,6 +233,17 @@ var initialize = function () {
     saveButton.setAttribute("download", "drawing.png");
     canvasWidthSelect.value = canvas.width.toString();
     canvasHeightSelect.value = canvas.height.toString();
+};
+var toggleDarkMode = function () {
+    darkmode = !darkmode;
+    var body = document.body;
+    var html = document.documentElement;
+    body.classList.toggle("dark-mode");
+    html.classList.toggle("dark-mode");
+    updateDarkmodeButton();
+};
+var updateDarkmodeButton = function () {
+    darkmodeButton.innerHTML = darkmode ? "On" : "Off";
 };
 var setBrushColor = function () {
     brush.color = brushColorSelect.value;

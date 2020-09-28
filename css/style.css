@@ -1,0 +1,185 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0; }
+
+html,
+body {
+  background-color: #ddd;
+  color: #333;
+  font-family: "Arial", sans-serif; }
+
+a {
+  color: inherit;
+  text-decoration: none; }
+
+a:hover {
+  color: inherit;
+  text-decoration: none; }
+
+canvas {
+  display: block;
+  margin: 0 auto;
+  border: 1px solid; }
+
+footer {
+  padding: 1em; }
+  footer .credit {
+    text-align: center; }
+  footer a {
+    text-decoration: underline; }
+  footer a:hover {
+    color: #ff0066;
+    text-decoration: underline; }
+
+header {
+  padding: 1em 0; }
+  header .flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; }
+  header .title {
+    display: flex;
+    align-items: center; }
+  header .dark-mode-toggle {
+    display: flex;
+    align-items: center; }
+    header .dark-mode-toggle .btn {
+      margin-left: 3px;
+      width: auto;
+      height: auto;
+      padding: 3px; }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0; }
+
+input[type="color"] {
+  background-color: inherit;
+  color: inherit;
+  border: 1px solid;
+  box-sizing: border-box;
+  height: 100%;
+  max-width: 50px;
+  position: relative; }
+
+input[type="number"] {
+  background-color: inherit;
+  text-align: center;
+  color: inherit;
+  border: 1px solid;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  height: 100%;
+  max-width: 50px;
+  -moz-appearance: textfield; }
+
+.btn {
+  border: 1px solid;
+  color: inherit;
+  background-color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  text-align: center; }
+
+.btn:hover {
+  color: #ff0066; }
+
+.btn:active {
+  background-color: #ff0066;
+  color: #ddd; }
+
+.btn:disabled {
+  background-color: #333;
+  color: #999; }
+
+.container {
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 2em; }
+
+.tools-grid {
+  display: grid;
+  width: 100%;
+  max-width: 100%;
+  margin: 1em 0;
+  column-gap: 0.5em;
+  row-gap: 0.2em;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 25px 25px 25px;
+  grid-template-areas: "brush-label . . canvas-label . . history-label drawing-label" "size-label size-input shape-buttons width-label width-select width-apply undo-button save-button" "color-label color-select color-picker height-label height-select height-apply redo-button clear-button"; }
+
+.brush-label {
+  grid-area: brush-label; }
+
+.canvas-label {
+  grid-area: canvas-label; }
+
+.history-label {
+  grid-area: history-label; }
+
+.drawing-label {
+  grid-area: drawing-label; }
+
+.size-label {
+  grid-area: size-label; }
+
+.size-input {
+  grid-area: size-input; }
+
+.shape-buttons {
+  grid-area: shape-buttons;
+  display: flex; }
+  .shape-buttons button {
+    width: 50%; }
+
+.width-label {
+  grid-area: width-label; }
+
+.width-select {
+  grid-area: width-select; }
+
+.width-apply {
+  grid-area: width-apply; }
+
+.undo-button {
+  grid-area: undo-button; }
+
+.save-button {
+  grid-area: save-button; }
+
+.color-label {
+  grid-area: color-label; }
+
+.color-select {
+  grid-area: color-select; }
+
+.color-picker {
+  grid-area: color-picker; }
+
+.height-label {
+  grid-area: height-label; }
+
+.height-select {
+  grid-area: height-select; }
+
+.height-apply {
+  grid-area: height-apply; }
+
+.redo-button {
+  grid-area: redo-button; }
+
+.clear-button {
+  grid-area: clear-button; }
+
+.dark-mode {
+  background-color: #333;
+  color: #ddd; }
+
+/*# sourceMappingURL=style.css.map */

@@ -2,94 +2,107 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>rzeczuchyDraw</title>
-    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/style.css" />
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
   </head>
 
   <body>
-    <div class="tools-container">
-      <table>
-        <tr>
-          <th>Brush</th>
-          <th></th>
-          <th></th>
-          <th>Canvas</th>
-          <th></th>
-          <th></th>
-          <th>History</th>
-          <th>Drawing</th>
-        </tr>
-        <tr>
-          <td>Size:</td>
-          <td>
+    <header>
+      <div class="container flex">
+        <div class="title">
+          <img src="favicon.ico" alt="icon" />
+          <span>rzeczuchyDraw</span>
+        </div>
+        <div class="dark-mode-toggle">
+          <span>Dark mode:</span>
+          <button
+            id="darkmodeButton"
+            class="btn"
+            type="button"
+            name="goodnight"
+            onclick="toggleDarkMode()"
+          ></button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <div class="tools-grid">
+          <div class="brush-label">Brush</div>
+          <div class="canvas-label">Canvas</div>
+          <div class="history-label">History</div>
+          <div class="drawing-label">Drawing</div>
+          <div class="size-label">Size:</div>
+          <div class="size-input">
             <input
               id="brushSizeSelect"
               type="number"
               oninput="setBrushSize()"
             />
-          </td>
-          <td>
+          </div>
+          <div class="shape-buttons">
             <button
-              class="action-button half-width"
+              class="btn"
               type="button"
               name="button"
               onclick="setRoundBrush()"
             >
-              ⚪</button
-            ><button
-              class="action-button half-width"
+              ⚪
+            </button>
+            <button
+              class="btn"
               type="button"
               name="button"
               onclick="setSquareBrush()"
             >
               ◻
             </button>
-          </td>
-          <td>Width:</td>
-          <td><input id="canvasWidthSelect" type="number" /></td>
-          <td>
+          </div>
+          <div class="width-label">Width:</div>
+          <div class="width-select">
+            <input id="canvasWidthSelect" type="number" />
+          </div>
+          <div class="width-apply">
             <button
               id="applyCanvasWidth"
-              class="action-button"
+              class="btn"
               type="button"
               name="button"
               onclick="setCanvasWidth()"
             >
               Apply
             </button>
-          </td>
-          <td>
+          </div>
+          <div class="undo-button">
             <button
               id="undoButton"
-              class="action-button"
+              class="btn"
               type="button"
               name="button"
               onclick="undo()"
             >
               Undo(z)
             </button>
-          </td>
-          <td>
+          </div>
+          <div class="save-button">
             <a id="saveButton"
-              ><button class="action-button" type="button" name="button">
-                Save
-              </button></a
+              ><button class="btn" type="button" name="button">Save</button></a
             >
-          </td>
-        </tr>
-        <tr>
-          <td>Color:</td>
-          <td>
+          </div>
+          <div class="color-label">Color:</div>
+          <div class="color-select">
             <input
               id="brushColorSelect"
               type="color"
               oninput="setBrushColor()"
             />
-          </td>
-          <td>
+          </div>
+          <div class="color-picker">
             <button
-              class="action-button"
+              class="btn"
               id="colorPickerButton"
               type="button"
               name="button"
@@ -97,58 +110,67 @@
             >
               Pick
             </button>
-          </td>
-          <td>Height:</td>
-          <td><input id="canvasHeightSelect" type="number" /></td>
-          <td>
+          </div>
+          <div class="height-label">Height:</div>
+          <div class="height-select">
+            <input id="canvasHeightSelect" type="number" />
+          </div>
+          <div class="height-apply">
             <button
-              id="applyCanvasWidth"
-              class="action-button"
+              id="applyCanvasHeight"
+              class="btn"
               type="button"
               name="button"
               onclick="setCanvasHeight()"
             >
               Apply
             </button>
-          </td>
-          <td>
+          </div>
+          <div class="redo-button">
             <button
               id="redoButton"
-              class="action-button"
+              class="btn"
               type="button"
               name="button"
               onclick="redo()"
             >
               Redo(y)
             </button>
-          </td>
-          <td>
+          </div>
+          <div class="clear-button">
             <button
               id="clearButton"
-              class="action-button"
+              class="btn"
               type="button"
               name="button"
               onclick="clearCanvas()"
             >
               Clear
             </button>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <canvas id="drawingCanvas" width="500" height="400"></canvas>
-    <div class="footer">
-      <p>
-        coded by
-        <a
-          href="https://github.com/rzeczuchy"
-          target="_blank"
-          rel="noopener noreferrer"
-          >rzeczuchy</a
-        >
-        2020 ver 1.1.2
-      </p>
-    </div>
+          </div>
+        </div>
+
+        <div class="canvas">
+          <canvas id="drawingCanvas" width="500" height="400"></canvas>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p class="credit">
+          coded by
+          <a
+            href="https://github.com/rzeczuchy"
+            class="animated-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            >rzeczuchy</a
+          >
+          2020 ver 1.2
+        </p>
+      </div>
+    </footer>
     <script src="scripts/app.js"></script>
   </body>
 </html>

@@ -1,6 +1,9 @@
 "use strict";
 
 // CONSTANTS, VARIABLES, ENUMS
+const darkmodeButton: HTMLButtonElement = <HTMLButtonElement>(
+  document.getElementById("darkmodeButton")
+);
 const canvas: HTMLCanvasElement = <HTMLCanvasElement>(
   document.getElementById("drawingCanvas")
 );
@@ -35,6 +38,7 @@ let colorPicker: ColorPicker;
 let currentTool: Tool;
 let toUndo: HTMLImageElement[] = [];
 let toRedo: HTMLImageElement[] = [];
+let darkmode: boolean = document.body.classList.contains("dark-mode");
 
 enum BrushShape {
   Square,
@@ -239,6 +243,7 @@ class ColorPicker extends Tool {
 
 // FUNCTIONS
 const initialize = (): void => {
+  updateDarkmodeButton();
   canvas.width = defaultCanvasWidth;
   canvas.height = defaultCanvasHeight;
   canvas.style.cursor = "crosshair";
@@ -251,6 +256,19 @@ const initialize = (): void => {
   saveButton.setAttribute("download", "drawing.png");
   canvasWidthSelect.value = canvas.width.toString();
   canvasHeightSelect.value = canvas.height.toString();
+};
+
+const toggleDarkMode = (): void => {
+  darkmode = !darkmode;
+  const body = document.body;
+  const html = document.documentElement;
+  body.classList.toggle("dark-mode");
+  html.classList.toggle("dark-mode");
+  updateDarkmodeButton();
+};
+
+const updateDarkmodeButton = (): void => {
+  darkmodeButton.innerHTML = darkmode ? "On" : "Off";
 };
 
 const setBrushColor = (): void => {
