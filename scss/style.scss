@@ -1,4 +1,4 @@
-$font-stack: "Arial", sans-serif;
+$font-stack: "Courier New", sans-serif;
 $light: #ddd;
 $dark: #333;
 $muted: #999;
@@ -13,6 +13,7 @@ $highlight: lighten($primary, 20);
 
 html,
 body {
+  font-size: 0.95em;
   background-color: $light;
   color: $dark;
   font-family: $font-stack;
