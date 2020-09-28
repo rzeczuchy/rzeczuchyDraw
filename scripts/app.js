@@ -95,7 +95,7 @@ var Brush = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.color = "#ff0066";
         _this.minSize = 1;
-        _this.maxSize = 20;
+        _this.maxSize = 100;
         _this.size = 1;
         _this.shape = BrushShape.Square;
         return _this;

@@ -111,7 +111,7 @@ class Brush extends Tool {
     super();
     this.color = "#ff0066";
     this.minSize = 1;
-    this.maxSize = 20;
+    this.maxSize = 100;
     this.size = 1;
     this.shape = BrushShape.Square;
   }
