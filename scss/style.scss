@@ -4,6 +4,8 @@ $dark: #333;
 $muted: #999;
 $primary: #ff0066;
 $highlight: lighten($primary, 20);
+$input-width-min: 3.5em;
+$input-width-max: 4.5em;
 
 * {
   box-sizing: border-box;
@@ -78,32 +80,35 @@ header {
   }
 }
 
+input {
+  font-family: inherit;
+  font-size: inherit;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  min-width: $input-width-min;
+  max-width: $input-width-max;
+  border: 1px solid;
+  position: relative;
+  background-color: inherit;
+  color: inherit;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type="color"] {
-  background-color: inherit;
-  color: inherit;
-  border: 1px solid;
-  box-sizing: border-box;
-  height: 100%;
-  max-width: 50px;
-  position: relative;
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-input[type="number"] {
-  background-color: inherit;
-  text-align: center;
-  color: inherit;
-  border: 1px solid;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: inherit;
-  height: 100%;
-  max-width: 50px;
+input[type=number]
+{
   -moz-appearance: textfield;
 }
 
@@ -115,6 +120,8 @@ input[type="number"] {
   font-size: inherit;
   width: 100%;
   height: 100%;
+  min-width: $input-width-min;
+  max-width: $input-width-max;
   text-decoration: none;
   text-align: center;
 }
@@ -140,19 +147,31 @@ input[type="number"] {
   padding: 0 2em;
 }
 
+.label {
+  text-align: right;
+}
+
+.heading {
+  font-weight: bold;
+}
+
 .tools-grid {
+  border: 1px solid;
+  overflow: hidden;
+  padding: 0.5em;
   display: grid;
   width: 100%;
   max-width: 100%;
+  text-align: center;
   margin: 1em 0;
-  column-gap: 0.5em;
+  column-gap: 0.2em;
   row-gap: 0.2em;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 25px 25px 25px;
   grid-template-areas:
-    "brush-label . . canvas-label . . history-label drawing-label"
-    "size-label size-input shape-buttons width-label width-select width-apply undo-button save-button"
-    "color-label color-select color-picker height-label height-select height-apply redo-button clear-button";
+    "color-label brush-label brush-label canvas-label canvas-label canvas-label history-label drawing-label"
+    "color-select size-label size-input width-label width-select width-apply undo-button save-button"
+    "color-picker shape-label shape-buttons height-label height-select height-apply redo-button clear-button";
 }
 
 .brush-label {
@@ -179,12 +198,20 @@ input[type="number"] {
   grid-area: size-input;
 }
 
+.shape-label {
+  grid-area: shape-label;
+}
+
 .shape-buttons {
   grid-area: shape-buttons;
   display: flex;
+  justify-content: center;
 
   button {
     width: 50%;
+    height: 100%;
+    min-width: $input-width-min / 2;
+    max-width: $input-width-max / 2;
   }
 }
 
